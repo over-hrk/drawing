@@ -3,7 +3,7 @@
 
     "debugMode" : 1,
     "showFPS" : true,
-    "frameRate" : 60,
+    "frameRate" : 30,
     "noCache" : true,
     "id" : "gameCanvas",
     "renderMode" : 0,
@@ -16,12 +16,16 @@
         "src/resource.js",
         "src/message.js",
         "src/global.js",
+        "src/Constants.js",
+        "src/utility.js",
         "src/rtc.js",
         "src/MainScene.js",
         "src/EnterScene.js",
         "src/VirtualLayer.js",
         "src/drawLayer.js",
         "src/ItemMenu.js",
-        "src/balloon.js"
+        "src/balloon.js",
+        "src/ItemMenu.js",
+        "src/VideoLayler.js"
     ]
 }

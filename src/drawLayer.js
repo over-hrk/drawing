@@ -2,6 +2,7 @@ var DrowLayer = cc.LayerColor.extend({
     sprite:null,
     numObjs : 0,
     moveTarget : null,
+    figureIndex : 0,
     
     ctor:function () {
         this._super(cc.color(200,200, 50,100), cc.winSize.width/2, cc.winSize.height/2);
@@ -42,6 +43,7 @@ var DrowLayer = cc.LayerColor.extend({
         node.setPosition(posNode);
         
         this.addChild(node, this.numObjs++);
+        node.setTag(this.figureIndex++);
     },
     
     /**
@@ -87,6 +89,7 @@ var DrowLayer = cc.LayerColor.extend({
         node.setPosition(pos);
         
         this.addChild(node, this.numObjs++);
+        node.setTag(this.figureIndex++);
     },
     
     
@@ -128,7 +131,27 @@ var DrowLayer = cc.LayerColor.extend({
             
         return closeObj;
     },
-    
+
+    receiver: function(data) {
+        switch(data.action) {
+            case "add":
+                switch (data.fugure) {
+                    case "circle":
+                        this.addCircle(data.radius);
+                        break;
+                    case "rect":
+                        this.addRect(cc.size(data.sizex,data.sizey));
+                        break;
+                    case "tri":
+                        this.addTriAngle(data.radius);
+                        break;
+                }
+                break;
+            case "move":
+                this.getChildByTag(data.target_no).setPosition(this.convertToNodeSpace(data.touch));
+        }
+    },
+
     /**
      * touch event callback.
      */
@@ -155,7 +178,6 @@ var DrowLayer = cc.LayerColor.extend({
             }
             
             target.moveTarget = closeObj;
-            
             return true;
         },
         
@@ -167,7 +189,8 @@ var DrowLayer = cc.LayerColor.extend({
             var target = event.getCurrentTarget();          
        
             target.moveTarget.setPosition(target.convertToNodeSpace(touch.getLocation()));
-            
+            cc.log("tag is " + target.moveTarget.getTag());
+            rtc_manager.send({"label":"draw", "action":"move", "target_no":target.moveTarget.getTag(), "touch":touch.getLocation()});
             return true;
         },
         
@@ -180,6 +203,6 @@ var DrowLayer = cc.LayerColor.extend({
             target.moveTarget = null;
             
             return false;
-        } 
+        }
     } 
 });
