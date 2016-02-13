@@ -17,6 +17,7 @@
         "src/message.js",
         "src/global.js",
         "src/rtc.js",
+        "src/utility.js",
         "src/MainScene.js",
         "src/EnterScene.js",
         "src/VirtualLayer.js"
