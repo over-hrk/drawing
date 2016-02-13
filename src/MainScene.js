@@ -209,6 +209,12 @@ var MainScene = cc.Scene.extend({
             var menuLayer    = new MenuLayer();
             var drawLayer    = new DrowLayer();
             
+            drawLayer.attr({
+                x : cc.winSize.width/4,
+                y : cc.winSize.height/2
+            });
+            
+            
             menuLayer.setDrawCircleMenuCallback(function(val){
                 var radius = 50;
                 drawLayer.addCircle(radius);

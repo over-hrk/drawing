@@ -4,7 +4,7 @@ var DrowLayer = cc.LayerColor.extend({
     moveTarget : null,
     
     ctor:function () {
-        this._super(cc.color(200,200, 50,100));
+        this._super(cc.color(200,200, 50,100), cc.winSize.width/2, cc.winSize.height/2);
         
         // start listening touch event.
         var event = cc.EventListener.create(this.touchEvent);
@@ -142,7 +142,9 @@ var DrowLayer = cc.LayerColor.extend({
             var target = event.getCurrentTarget();
           
             var children = target.getChildren();
-            var closeObj = target.getCloseObject(touch.getLocation(), children);
+            
+            var pos = target.convertToNodeSpace(touch.getLocation());
+            var closeObj = target.getCloseObject(pos, children);
             
             if( !closeObj ){
                 return false;
@@ -159,11 +161,8 @@ var DrowLayer = cc.LayerColor.extend({
         onTouchMoved : function (touch, event) {
             // cc.log("onTouchMoved in VirtualLayer");
             var target = event.getCurrentTarget();          
-            
-            target.moveTarget.attr({
-                x : touch.getLocationX(),
-                y : touch.getLocationY()
-            });
+       
+            target.moveTarget.setPosition(target.convertToNodeSpace(touch.getLocation()));
             
             return true;
         },
