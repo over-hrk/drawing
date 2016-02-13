@@ -9,21 +9,20 @@ var VirtualLayer = cc.LayerColor.extend({
         var winSize = cc.winSize;
         this.setVisible(cc.game.config[cc.game.CONFIG_KEY.debugMode]);
         
-        // virtual mallet
-        /*
-        var mallet = new cc.Sprite( res.Mallet );
-        mallet.attr({
-            x: mkmk.frameByFrameSyncManager.isHost ? winSize.width * 2 / 6 : winSize.width * 4 / 6,
+        // virtual mouse
+        var v_mouse = new cc.Node();
+        v_mouse.attr({
+            x: winSize.width / 2,
             y: winSize.height / 2,
-            scaleX : 100/mallet.width,
-            scaleY : 100/mallet.height,
+            scaleX : 100/v_mouse.width,
+            scaleY : 100/v_mouse.height,
             anchorX : 0.5,
             anchorY : 0.5,
-            r : 50
+            touched : false
         });
-        this.addChild(mallet, 1);
-        this.mallet = mallet;
-        */
+        this.addChild(v_mouse, 1);
+        this.v_mouse = v_mouse;
+        
         // set clip window
         /*
         this.clipWindow = (function(){
@@ -39,6 +38,7 @@ var VirtualLayer = cc.LayerColor.extend({
             };    
         })();
         */
+        
         // start listening touch event.
         var event = cc.EventListener.create(this.touchEvent);
         cc.eventManager.addListener(event, this);
@@ -48,19 +48,23 @@ var VirtualLayer = cc.LayerColor.extend({
     },
     
     /**
-     * move mallet.
+     * location mouse.
      * @param {cc.Point}
      */
-    moveMallet : function(location){
+    loc_mouse : function(location){
         
-        // clip
-        var x = Math.max( this.clipWindow.minX, Math.min(location.x, this.clipWindow.maxX ));
-        var y = Math.max( this.clipWindow.minY, Math.min(location.y, this.clipWindow.maxY ));
+        // todo : clip with Window
+        // var x = Math.max( this.clipWindow.minX, Math.min(location.x, this.clipWindow.maxX ));
+        // var y = Math.max( this.clipWindow.minY, Math.min(location.y, this.clipWindow.maxY ));
         
-        this.mallet.attr({
-            x: x,
-            y: y
+        this.v_mouse.attr({
+            x: location.x,
+            y: location.y
         });
+    },
+    
+    setMouseTouch : function(isTouched){
+        this.v_mouse.touched = isTouched;
     },
     
     /**
@@ -71,40 +75,42 @@ var VirtualLayer = cc.LayerColor.extend({
         swallowTouches: true, // don't pass to lower layer.
         onTouchBegan: function (touch, event) {
             // cc.log("onTouchBegan in VirtualLayer");
-            // var target = event.getCurrentTarget();
-            // target.moveMallet(touch.getLocation());
+            var target = event.getCurrentTarget();
+            target.setMouseTouch(true);
+            
             return true;
         },
+        
+        
+        
         onTouchMoved : function (touch, event) {
             // cc.log("onTouchMoved in VirtualLayer");
-            var target = event.getCurrentTarget();
-            // target.moveMallet(touch.getLocation());  
-            var node = new cc.DrawNode();
-            // node.drawDot(touch.getLocation(), 10, cc.color(0,0,0));
             
-           	
-            node.drawSegment(
-                touch.getPreviousLocation(), 
-                touch.getLocation(), 
-                5, 
-                cc.color(0,0,0)
-            ); 
+            var target = event.getCurrentTarget();          
+            target.loc_mouse(touch.getLocation());
             
-            target.addChild(node);
-            return false;
-        }
+            return true;
+        },
+        
+        
+        onTouchEnded : function (touch, event) {
+            var target = event.getCurrentTarget();  
+            target.setMouseTouch(false);
+        } 
     },
     
     /**
      * processing per frame.
      */
     update : function(){
+        // cc.log("Send this.v_mouse", this.v_mouse.x, this.v_mouse.y, this.v_mouse.touched);
         
-        var malltLoc = {
-            //x : this.mallet.getPositionX(),
-            //y : this.mallet.getPositionY()
+        var mouseEvent = {
+            x : this.v_mouse.x,
+            y : this.v_mouse.y,
+            isTouched : this.v_mouse.touched
         };
         
-        mkmk.frameByFrameSyncManager.pushFrameData(malltLoc);
+        mkmk.frameByFrameSyncManager.pushFrameData(mouseEvent);
     }
 });

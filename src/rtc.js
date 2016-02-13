@@ -89,10 +89,10 @@ var rtc_manager = function() {
 
 		send : function(msg) {
 			if(hostPeerId == null) {
-				cc.log(msg + "(host)");
+				// cc.log(msg + "(host)");
 				send_to_all(msg);
 			}else {
-				cc.log(msg + "(servant)");
+				// cc.log(msg + "(servant)");
 				peer.connections[hostPeerId][0].send({msg:msg, id:myid});
 			}
 		},

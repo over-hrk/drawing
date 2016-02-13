@@ -3,72 +3,28 @@ var MainLayer = cc.LayerColor.extend({
     ctor:function () {
         this._super(cc.color(200,200, 50,100));
         var self = this;
-        var size = cc.winSize;
+        var winSize = cc.winSize;
         
         // show my peerID.
         var peerID_txt = new cc.LabelTTF(msg.showPeerID+rtc_manager.getmyid(), "Arial", 38);
-        peerID_txt.x = size.width / 2;
-        peerID_txt.y = size.height / 2 + 200;
+        peerID_txt.x = winSize.width / 2;
+        peerID_txt.y = winSize.height / 2 + 200;
         this.addChild(peerID_txt, 5);
-        /*
-        var bg = new cc.Sprite( res.Background );
-        bg.attr({
-            scaleX : size.width/bg.width,
-            scaleY : size.height/bg.height,
-            anchorX : 0,
-            anchorY : 0
-        });
-        this.addChild(bg, 1);
-        */
-        // show puck.
-        /*
-        var puck = new cc.Sprite( res.Puck );
-     
-        var pucksize = { width : 40 ,
-                        height : 40,
-                        r : 20 };
         
-        puck.attr({
-            x: size.width / 2,
-            y: size.height / 2,
-            scaleX : pucksize.width/puck.width,
-            scaleY : pucksize.height/puck.height,
-            speed : {x : 10, y :10 },
+        // real mouse (but unvisible)
+        var v_mouse = new cc.Node();
+        v_mouse.attr({
+            x: winSize.width / 2,
+            y: winSize.height / 2,
+            scaleX : 100/v_mouse.width,
+            scaleY : 100/v_mouse.height,
             anchorX : 0.5,
             anchorY : 0.5,
-            r : pucksize.r
+            touched : false
         });
-        this.addChild(puck, 1);
-        this.puck = puck;
+        this.addChild(v_mouse, 1);
+        this.v_mouse = v_mouse;
         
-        // show my mallet.
-        var mallet = new cc.Sprite( res.Mallet );
-        mallet.attr({
-            x: mkmk.frameByFrameSyncManager.isHost ? size.width * 2 / 6 : size.width * 4 / 6,
-            y: size.height / 2,
-            scaleX : 100/mallet.width,
-            scaleY : 100/mallet.height,
-            anchorX : 0.5,
-            anchorY : 0.5,
-            r : 50
-        });
-        this.addChild(mallet, 1);
-        this.mallet = mallet;
-        
-        // show enemy mallet.
-        var enemyMallet = new cc.Sprite( res.Mallet );
-        enemyMallet.attr({
-            x: mkmk.frameByFrameSyncManager.isHost ? size.width * 4 / 6 : size.width * 2 / 6,
-            y: size.height / 2,
-            scaleX : 100/enemyMallet.width,
-            scaleY : 100/enemyMallet.height,
-            anchorX : 0.5,
-            anchorY : 0.5,
-            r : 50
-        });
-        this.addChild(enemyMallet, 1);
-        this.enemyMallet = enemyMallet;
-        */
         // start processig received rtc data.
         mkmk.frameByFrameSyncManager.startReceiveFrame();
         
@@ -76,127 +32,38 @@ var MainLayer = cc.LayerColor.extend({
         this.scheduleUpdate();
     },
     
+    
     /**
-     * move my mallet.
+     * location mouse.
      * @param {cc.Point}
      */
-    moveMyMallet : function(location){
-        this.mallet.attr({
+    loc_mouse : function(location){
+        
+        // todo : clip with Window
+        // var x = Math.max( this.clipWindow.minX, Math.min(location.x, this.clipWindow.maxX ));
+        // var y = Math.max( this.clipWindow.minY, Math.min(location.y, this.clipWindow.maxY ));
+        
+        this.v_mouse.attr({
             x: location.x,
-            y: location.y
+            y: location.y,
+            touched : location.isTouched
         });
     },
     
-    /**
-     * move enemy's mallet.
-     * @param {cc.Point}
+    /*
+     * draw line 
      */
-    moveEnemyMallet : function(location){
-        this.enemyMallet.attr({
-            x: location.x,
-            y: location.y
-        });
-    },
-    
-    /**
-     * Collision detecion with window.
-     *  update position and speed.
-     * @param {cc.Sprite}
-     */
-    detectCollisionWindow : function(puck){
+    drawLine : function(){
         
-        var winSize = cc.winSize;
-        var r = puck.r;
-        var hit = false;
-        
-        if( puck.y + r > winSize.height ){
-            // top
-            puck.speed.y = - puck.speed.y;
-            puck.y = winSize.height - r;
-            hit = true;
-        }else if( puck.y - r < 0 ){
-            // bottom
-            puck.speed.y = -puck.speed.y;
-            puck.y = r;
-            hit = true;
-        }
-        
-        if( puck.x + r > winSize.width ){
-            // right
-            puck.speed.x = -puck.speed.x;
-            puck.x = winSize.width - r;
-            hit = true;
-        }else if( puck.x - r < 0 ){
-            // left
-            puck.speed.x = -puck.speed.x;
-            puck.x = r;
-            hit = true;
-        }
-        
-        if( hit ){
-            cc.audioEngine.playEffect(res.Voice);
-        }
-        
-    },
-    
-    /**
-     * Collision detecion with mallet.
-     *  update position and speed.
-     * @param {cc.Sprite, cc.Sprite}
-     */
-    detectCollisionMallet : function(puck, mallet){
-        
-        var distance = cc.pDistance(puck.getPosition(), mallet.getPosition());
-        var dist = puck.r + mallet.r;
-        
-        if( distance > dist ){
-            return;
-        }
-        
-        cc.audioEngine.playEffect(res.Voice);
-        
-        // pack and mallet mustn't be overlap.
-        var dX = puck.getPosition().x - mallet.getPosition().x;
-        var dY = puck.getPosition().y - mallet.getPosition().y;
-        puck.setPosition( mallet.x + dist * dX / distance, mallet.y + dist * dY / distance);
-        
-        // update speed vector.
-        dX = puck.getPosition().x - mallet.getPosition().x;
-        dY = puck.getPosition().y - mallet.getPosition().y;
-        
-        // rotate vector with Affine Transform.
-        var vX = ( puck.speed.x *  1 * dX + puck.speed.y * dY )/dist;
-        var vY = ( puck.speed.x * -1 * dY + puck.speed.y * dX )/dist ;
-        
-        // reflect
-        vX = -vX;
-        
-        // Inverse Affine Transform.
-        puck.speed.x = ( vX * dX - vY * dY ) / (dist);
-        puck.speed.y = ( vX * dY + vY * dX ) / (dist);
-    },
-    
-    /**
-     * updatePack.
-     *  Collision detection.
-     *   - to window.
-     *   - to mallets.
-     */
-    updatePuck : function(dt){
-        
-        var puck = this.puck;
-        var mallet = this.mallet;
-        var enemymallet = this.enemyMallet;
-        
-        // update position normally.
-        puck.x += puck.speed.x;
-        puck.y += puck.speed.y;
-        
-        // update property of puck.
-        this.detectCollisionWindow(puck);
-        // The order is not a problem in the situation two mallets never overlap.
-        this.detectCollisionMallet(puck, mallet);
-        this.detectCollisionMallet(puck, enemymallet);
+        var node = new cc.DrawNode();
+           	
+        node.drawDot(
+            cc.p(this.v_mouse.x, this.v_mouse.y), 
+            10, 
+            cc.log(0,0,0)
+        );
+            
+        this.addChild(node);
     },
     
     /**
@@ -227,16 +94,15 @@ var MainLayer = cc.LayerColor.extend({
             return;
         }
         
-        // adjust my mallet position.
-        this.moveMyMallet( cc.p(  data.x,
-                                  data.y ));
-                                
-        // adjust enemy's mallet position.
-        this.moveEnemyMallet( cc.p(  enemyData.x,
-                                     enemyData.y ));
-        
-        // determine the puck postision.       
-        this.updatePuck(dt);
+        if( mkmk.frameByFrameSyncManager.isHost ){
+            this.loc_mouse(enemyData);
+        }else{
+            this.loc_mouse(data);
+        }
+         
+        if( this.v_mouse.touched ){
+            this.drawLine();
+        }
         
         // frame update success.
         mkmk.frameByFrameSyncManager.incrementFrameCnt();
@@ -273,17 +139,15 @@ var MainScene = cc.Scene.extend({
             self.removeChild(waitLayer);
             self.addChild(virtualLayer,1);
         };
-       /* 
-       if( mkmk.frameByFrameSyncManager.isHost ){
-           rtc_manager.setConnectAction(function(){
-               startGame();
-           });
-       }else{
-           rtc_manager.connecting(mkmk.frameByFrameSyncManager.hostPeerID, function(){
-               startGame();
-           });
-       }
-       */
-       startGame();
+        
+        if( mkmk.frameByFrameSyncManager.isHost ){
+            rtc_manager.setConnectAction(function(){
+                startGame();
+            });
+        }else{
+            rtc_manager.connecting(mkmk.frameByFrameSyncManager.hostPeerID, function(){
+                startGame();
+            });
+        }
     }
 });
