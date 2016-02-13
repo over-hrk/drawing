@@ -1,7 +1,5 @@
 var MainLayer = cc.LayerColor.extend({
-    sprite:null,
-    lines:[],
-    
+  sprite: null,
     ctor:function () {
         this._super(cc.color(200,200, 50,100)); // , cc.winSize.width, 20);
         var self = this;
@@ -125,35 +123,58 @@ var MainLayer = cc.LayerColor.extend({
         this.addChild(node);
     },
     
-    drawFlip : function(){
+  /**
+   * location mouse.
+   * @param {cc.Point}
+   */
+  loc_mouse: function (location) {
         
-        var node = new cc.DrawNode();
+    // todo : clip with Window
+    // var x = Math.max( this.clipWindow.minX, Math.min(location.x, this.clipWindow.maxX ));
+    // var y = Math.max( this.clipWindow.minY, Math.min(location.y, this.clipWindow.maxY ));
         
-        node.drawSegment(
-            cc.p(this.v_mouseForFlip.prevX, this.v_mouseForFlip.prevY), 
-            cc.p(this.v_mouseForFlip.x, this.v_mouseForFlip.y), 
-            10, 
-            cc.color(0,0,0)
-        );
-            
-        this.addChild(node);
-    },
+    this.v_mouse.attr({
+      x: location.x,
+      y: location.y,
+      touched: location.isTouched,
+      prevX: location.prevX,
+      prevY: location.prevY
+    });
+  },
     
+  /*
+   * draw line 
+   */
+  drawLine: function () {
+
+    var node = new cc.DrawNode();
+
+    node.drawSegment(
+      cc.p(this.v_mouse.prevX, this.v_mouse.prevY),
+      cc.p(this.v_mouse.x, this.v_mouse.y),
+      10,
+      cc.color(0, 0, 0)
+      );
+
+    this.addChild(node);
+  },
     
-     
-    /**
-     * processing per frame.
-     */
-    update : function(dt){
+  /**
+   * processing per frame.
+   */
+  update: function (dt) {
          
-        // determine the sync-target frame count.
-        var synCnt = mkmk.frameByFrameSyncManager.getSyncCnt();
-        
-        if(synCnt < 0){
-            // delay分は無視　todo:予めマイナスのフレームデータを入れておくという手もある。その場合はこのif文は不要。
-            mkmk.frameByFrameSyncManager.incrementFrameCnt();
-            return;
-        } 
+    // frame update success.
+    mkmk.frameByFrameSyncManager.incrementFrameCnt();
+
+    // determine the sync-target frame count.
+    var synCnt = mkmk.frameByFrameSyncManager.getSyncCnt();
+
+    if (synCnt < 0) {
+      // delay分は無視　todo:予めマイナスのフレームデータを入れておくという手もある。その場合はこのif文は不要。
+      mkmk.frameByFrameSyncManager.incrementFrameCnt();
+      return;
+    } 
        
         // get current my data.
         var data = mkmk.frameByFrameSyncManager.getMyFrameData(synCnt);
@@ -186,23 +207,38 @@ var MainLayer = cc.LayerColor.extend({
         }
         ///////////////// ▲process per frame▲ /////////////////////
         
-        // frame update success.
-        mkmk.frameByFrameSyncManager.incrementFrameCnt();
+    // get current enemy data.
+    var enemyData = mkmk.frameByFrameSyncManager.getEnemyFrameData(synCnt);
+    if (enemyData === undefined) {
+      // cc.log("EnemyData Sync lost.");
+      return;
     }
+
+    if (mkmk.frameByFrameSyncManager.isHost) {
+      this.loc_mouse(enemyData);
+    } else {
+      this.loc_mouse(data);
+    }
+
+    if (this.v_mouse.touched) {
+      this.drawLine();
+    }
+        
+  }
 });
 
 var WaitLayer = cc.LayerColor.extend({
-    sprite:null,
-    ctor:function () {
-        this._super(cc.color(200,200, 50,100));
-        var size = cc.winSize;
+  sprite: null,
+  ctor: function () {
+    this._super(cc.color(200, 200, 50, 100));
+    var size = cc.winSize;
         
-        // massage.
-        var massage = new cc.LabelTTF( msg.waitConnect, "Arial", 38);
-        massage.x = size.width / 2;
-        massage.y = size.height / 2 + 200;
-        this.addChild(massage, 0);
-    }
+    // massage.
+    var massage = new cc.LabelTTF(msg.waitConnect, "Arial", 38);
+    massage.x = size.width / 2;
+    massage.y = size.height / 2 + 200;
+    this.addChild(massage, 0);
+  }
 });
 
 var MainScene = cc.Scene.extend({
@@ -220,6 +256,7 @@ var MainScene = cc.Scene.extend({
             var menuLayer    = new MenuLayer();
             var drawLayer    = new DrowLayer();
             var textLayer1   = new TextInputLayer(cc.size(250,70));
+            var videoLayer = new VideoLayer();
             
             drawLayer.attr({
                 x : cc.winSize.width/4,
@@ -291,16 +328,22 @@ var MainScene = cc.Scene.extend({
             self.addChild(virtualLayer,1);
             self.addChild(menuLayer,2);
             self.addChild(textLayer1, 2);
+            self.addChild(videoLayer, 2);
         };
-        
-        if( mkmk.frameByFrameSyncManager.isHost ){
-            rtc_manager.setConnectAction(function(){
+
+    if (mkmk.frameByFrameSyncManager.isHost) {
+        rtc_manager.setConnectAction(function () {
+            console.log("i am host");
+            console.log(rtc_manager.get_connections().length);
+            if (rtc_manager.get_connections().length == MAX_USERS) {
                 startGame();
-            });
-        }else{
-            rtc_manager.connecting(mkmk.frameByFrameSyncManager.hostPeerID, function(){
-                startGame();
-            });
-        }
+            }
+        });
+    } else {
+        console.log("i am client");
+      rtc_manager.connecting(mkmk.frameByFrameSyncManager.hostPeerID, function () {
+        startGame();
+      });
     }
+  }
 });

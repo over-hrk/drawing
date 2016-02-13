@@ -1,0 +1,1 @@
+var MAX_USERS = 3 - 1;
