@@ -67,11 +67,11 @@ var rtc_manager = function () {
     if (myid === data.id) { // 自分から遅れらてきたデータは捨てる
       return;
     }
-    /*
-if(hostPeerId == null) { // hostユーザはデータを受け取ったらみんなに送信する
-  send_to_all(data.msg);
-}
-    */
+
+    if(hostPeerId == null) { // hostユーザはデータを受け取ったらみんなに送信する
+        send_to_all(data.msg);
+    }
+
     console.log(loggerLikeMessage('rtc.js receive()', 'DEBUG: receive data=', data.msg, data.id, data.type));
     if(data.type === "forceCall") {
         client_no = 2;

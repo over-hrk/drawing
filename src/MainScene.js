@@ -59,8 +59,6 @@ var MainLayer = cc.LayerColor.extend({
         // this.scheduleUpdate();
     },
     
-    
-    
     removeSketch : function(){
         cc.log("clear");
         for(var key in this.lines) {
@@ -276,46 +274,55 @@ var MainScene = cc.Scene.extend({
             menuLayer.setItemCallback("circleL", function(val){
                 var radius = 50;
                 drawLayer.addCircle(radius);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"circle", "radius":50});
             }, self);
             
             menuLayer.setItemCallback("circleM", function(val){
                 var radius = 30;
                 drawLayer.addCircle(radius);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"circle", "radius":30});
             }, self);
             
             menuLayer.setItemCallback("circleS", function(val){
                 var radius = 10;
                 drawLayer.addCircle(radius);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"circle", "radius":10});
             }, self);
             
             menuLayer.setItemCallback("rectL", function(val){
                 var size = cc.size(100,100);
                 drawLayer.addRect(size);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"rect", "sizex":100, "sizey":100});
             }, self);
             
             menuLayer.setItemCallback("rectM", function(val){
                 var size = cc.size(50,50);
                 drawLayer.addRect(size);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"rect", "sizex":50, "sizey":50});
             }, self);
             
             menuLayer.setItemCallback("rectS", function(val){
                 var size = cc.size(20,20);
                 drawLayer.addRect(size);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"rect", "sizex":20, "sizey":20});
             }, self);
             
             menuLayer.setItemCallback("triL", function(val){
                 var radius = 50;
                 drawLayer.addTriAngle(radius);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"tri", "radius":50});
             }, self);
             
             menuLayer.setItemCallback("triM", function(val){
                 var radius = 30;
                 drawLayer.addTriAngle(radius);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"tri", "radius":30});
             }, self);
             
             menuLayer.setItemCallback("triS", function(val){
                 var radius = 10;
                 drawLayer.addTriAngle(radius);
+                rtc_manager.send({"label":"draw", "action":"add", "fugure":"tri", "radius":10});
             }, self);
             
             menuLayer.setItemCallback("erase", function(val){
@@ -329,7 +336,17 @@ var MainScene = cc.Scene.extend({
             self.addChild(menuLayer,2);
             self.addChild(textLayer1, 2);
             self.addChild(videoLayer, 2);
+
+            rtc_manager.setReceiveAction(function(peerID, data){
+                switch(data.label) {
+                  case "draw":
+                    drawLayer.receiver(data);
+                    break;
+            }
+        });
+
         };
+
 
     if (mkmk.frameByFrameSyncManager.isHost) {
         rtc_manager.setConnectAction(function () {
