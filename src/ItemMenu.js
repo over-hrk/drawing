@@ -13,7 +13,7 @@ var MenuLayer = cc.LayerColor.extend({
         
         menu.attr({
             scaleX : _size/ menu.width,
-            scaleY : _size / menu.height
+            scaleY : _size / menu.width
         });
         
         menu.setName(_name);
@@ -24,21 +24,26 @@ var MenuLayer = cc.LayerColor.extend({
     ctor:function () {
         this._super(cc.color(200,200, 50,100), cc.winSize.width, 80);
        
-        var circleL =    this.makeMenuItem("circleL", res.Puck, 80 );
-        var circleM =    this.makeMenuItem("circleM", res.Puck, 80 );
-        var circleS =    this.makeMenuItem("circleS", res.Puck, 80 );
+        var menuSize = 40;
+       
+        var circleL =    this.makeMenuItem("circleL", res.circleL, menuSize );
+        var circleM =    this.makeMenuItem("circleM", res.circleM, menuSize );
+        var circleS =    this.makeMenuItem("circleS", res.circleS, menuSize );
         
-        var rectL =      this.makeMenuItem("rectL", res.Puck, 80 );
-        var rectM =      this.makeMenuItem("rectM", res.Puck, 80 );
-        var rectS =      this.makeMenuItem("rectS", res.Puck, 80 );
+        var rectL =      this.makeMenuItem("rectL", res.rectL, menuSize );
+        var rectM =      this.makeMenuItem("rectM", res.rectM, menuSize );
+        var rectS =      this.makeMenuItem("rectS", res.rectS, menuSize );
         
-        var triL =       this.makeMenuItem("triL", res.Puck, 80 );
-        var triM =       this.makeMenuItem("triM", res.Puck, 80 );
-        var triS =       this.makeMenuItem("triS", res.Puck, 80 );
+        var triL =       this.makeMenuItem("triL", res.triL, menuSize );
+        var triM =       this.makeMenuItem("triM", res.triM, menuSize );
+        var triS =       this.makeMenuItem("triS", res.triS, menuSize );
+        
+        var erase =      this.makeMenuItem("erase", res.erase, 100 );
         
         var menusCircle = new cc.Menu(circleL, circleM, circleS );
         var menusRect   = new cc.Menu(rectL, rectM, rectS );
         var menusTri    = new cc.Menu(triL, triM, triS );
+        var eraseButton = new cc.Menu(erase);
         
         menusCircle.alignItemsHorizontally();
         menusCircle.alignItemsHorizontallyWithPadding(0);
@@ -46,18 +51,17 @@ var MenuLayer = cc.LayerColor.extend({
         menusRect.alignItemsHorizontallyWithPadding(0);
         menusTri.alignItemsHorizontally();
         menusTri.alignItemsHorizontallyWithPadding(0);
-        // menus.alignItemsVerticallyWithPadding(0);
-        // menus.alignItemsInColumns(3,3,3);
-        // menus.alignItemsInRows(3,3,3);
         
-        menusCircle.setPosition(cc.p(200,100));
-        menusRect.setPosition(cc.p(200,200));
-        menusTri.setPosition(cc.p(200,300));
+        menusRect.setPosition(cc.p(0,200));
+        menusCircle.setPosition(cc.p(0,150));
+        menusTri.setPosition(cc.p(0,100));
+        eraseButton.setPosition(cc.p(0,50));
         
-        this.menus = [menusCircle, menusRect, menusTri];
+        this.menus = [menusCircle, menusRect, menusTri, eraseButton];
         this.addChild(menusCircle);
         this.addChild(menusRect);
         this.addChild(menusTri);
+        this.addChild(eraseButton);
     },
     
     findChildFromMenuByName : function(_name){

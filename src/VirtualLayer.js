@@ -7,7 +7,8 @@ var VirtualLayer = cc.LayerColor.extend({
     ctor : function () {
         this._super(cc.color(128,128, 128,128)); // 仮色
         var winSize = cc.winSize;
-        this.setVisible(cc.game.config[cc.game.CONFIG_KEY.debugMode]);
+        // this.setVisible(cc.game.config[cc.game.CONFIG_KEY.debugMode]);
+        this.setVisible(false);
         
         // virtual mouse
         var v_mouse = new cc.Node();

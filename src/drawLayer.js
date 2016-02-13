@@ -11,6 +11,10 @@ var DrowLayer = cc.LayerColor.extend({
         cc.eventManager.addListener(event, this);
     },
     
+    eraseAll : function(){   
+        this.removeAllChildren();
+    },
+    
     
     /*
      * 正多角形の描画

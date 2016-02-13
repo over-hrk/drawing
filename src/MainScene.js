@@ -13,6 +13,17 @@ var MainLayer = cc.LayerColor.extend({
         peerID_txt.y = winSize.height / 2 + 200;
         this.addChild(peerID_txt, 5);
         
+        var bg = new cc.Sprite(res.back);
+        bg.attr({
+           x : 0,
+           y : 0,
+           anchorX : 0,
+           anchorY : 0,
+           scaleX : winSize.width/bg.width,
+           scaleY : winSize.height/bg.height,
+        });
+        this.addChild(bg, 4);
+        
         // real mouse (but unvisible)
         var v_mouse = new cc.Node();
         v_mouse.attr({
@@ -214,6 +225,11 @@ var MainScene = cc.Scene.extend({
                 y : cc.winSize.height/2
             });
             
+            menuLayer.attr({
+                x : cc.winSize.width - 140,
+                y : cc.winSize.height/4 + 80
+            });
+            
             menuLayer.setItemCallback("circleL", function(val){
                 var radius = 50;
                 drawLayer.addCircle(radius);
@@ -255,8 +271,12 @@ var MainScene = cc.Scene.extend({
             }, self);
             
             menuLayer.setItemCallback("triS", function(val){
-                var radius = 30;
+                var radius = 10;
                 drawLayer.addTriAngle(radius);
+            }, self);
+            
+            menuLayer.setItemCallback("erase", function(val){
+                drawLayer.eraseAll();
             }, self);
             
             self.addChild(mainLayer   ,0);
