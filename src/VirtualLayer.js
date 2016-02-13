@@ -18,7 +18,9 @@ var VirtualLayer = cc.LayerColor.extend({
             scaleY : 100/v_mouse.height,
             anchorX : 0.5,
             anchorY : 0.5,
-            touched : false
+            touched : false,
+            prevX : winSize.width / 2,
+            prevY : winSize.height / 2,
         });
         this.addChild(v_mouse, 1);
         this.v_mouse = v_mouse;
@@ -51,7 +53,7 @@ var VirtualLayer = cc.LayerColor.extend({
      * location mouse.
      * @param {cc.Point}
      */
-    loc_mouse : function(location){
+    loc_mouse : function(location, prevLocation){
         
         // todo : clip with Window
         // var x = Math.max( this.clipWindow.minX, Math.min(location.x, this.clipWindow.maxX ));
@@ -59,7 +61,9 @@ var VirtualLayer = cc.LayerColor.extend({
         
         this.v_mouse.attr({
             x: location.x,
-            y: location.y
+            y: location.y,
+            prevX : prevLocation.x,
+            prevY : prevLocation.y
         });
     },
     
@@ -78,6 +82,8 @@ var VirtualLayer = cc.LayerColor.extend({
             var target = event.getCurrentTarget();
             target.setMouseTouch(true);
             
+            target.loc_mouse(touch.getLocation(), touch.getPreviousLocation());
+            
             return true;
         },
         
@@ -87,7 +93,7 @@ var VirtualLayer = cc.LayerColor.extend({
             // cc.log("onTouchMoved in VirtualLayer");
             
             var target = event.getCurrentTarget();          
-            target.loc_mouse(touch.getLocation());
+            target.loc_mouse(touch.getLocation(), touch.getPreviousLocation());
             
             return true;
         },
@@ -96,6 +102,8 @@ var VirtualLayer = cc.LayerColor.extend({
         onTouchEnded : function (touch, event) {
             var target = event.getCurrentTarget();  
             target.setMouseTouch(false);
+            
+            return false;
         } 
     },
     
@@ -108,7 +116,9 @@ var VirtualLayer = cc.LayerColor.extend({
         var mouseEvent = {
             x : this.v_mouse.x,
             y : this.v_mouse.y,
-            isTouched : this.v_mouse.touched
+            isTouched : this.v_mouse.touched,
+            prevX : this.v_mouse.prevX,
+            prevY : this.v_mouse.prevY            
         };
         
         mkmk.frameByFrameSyncManager.pushFrameData(mouseEvent);

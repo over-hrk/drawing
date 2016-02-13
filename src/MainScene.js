@@ -46,7 +46,9 @@ var MainLayer = cc.LayerColor.extend({
         this.v_mouse.attr({
             x: location.x,
             y: location.y,
-            touched : location.isTouched
+            touched : location.isTouched,
+            prevX : location.prevX,
+            prevY : location.prevY
         });
     },
     
@@ -56,11 +58,12 @@ var MainLayer = cc.LayerColor.extend({
     drawLine : function(){
         
         var node = new cc.DrawNode();
-           	
-        node.drawDot(
+        
+        node.drawSegment(
+            cc.p(this.v_mouse.prevX, this.v_mouse.prevY), 
             cc.p(this.v_mouse.x, this.v_mouse.y), 
             10, 
-            cc.log(0,0,0)
+            cc.color(0,0,0)
         );
             
         this.addChild(node);
