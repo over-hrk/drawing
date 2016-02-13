@@ -46,7 +46,7 @@ var VirtualLayer = cc.LayerColor.extend({
         cc.eventManager.addListener(event, this);
         
         // start frame processig.
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
     },
     
     /**
