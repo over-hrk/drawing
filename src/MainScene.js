@@ -214,19 +214,48 @@ var MainScene = cc.Scene.extend({
                 y : cc.winSize.height/2
             });
             
-            
-            menuLayer.setDrawCircleMenuCallback(function(val){
+            menuLayer.setItemCallback("circleL", function(val){
                 var radius = 50;
                 drawLayer.addCircle(radius);
             }, self);
             
-            menuLayer.setDrawRectMenuCallback(function(val){
+            menuLayer.setItemCallback("circleM", function(val){
+                var radius = 30;
+                drawLayer.addCircle(radius);
+            }, self);
+            
+            menuLayer.setItemCallback("circleS", function(val){
+                var radius = 10;
+                drawLayer.addCircle(radius);
+            }, self);
+            
+            menuLayer.setItemCallback("rectL", function(val){
                 var size = cc.size(100,100);
                 drawLayer.addRect(size);
             }, self);
             
-            menuLayer.setDrawTriMenuCallback(function(val){
+            menuLayer.setItemCallback("rectM", function(val){
+                var size = cc.size(50,50);
+                drawLayer.addRect(size);
+            }, self);
+            
+            menuLayer.setItemCallback("rectS", function(val){
+                var size = cc.size(20,20);
+                drawLayer.addRect(size);
+            }, self);
+            
+            menuLayer.setItemCallback("triL", function(val){
                 var radius = 50;
+                drawLayer.addTriAngle(radius);
+            }, self);
+            
+            menuLayer.setItemCallback("triM", function(val){
+                var radius = 30;
+                drawLayer.addTriAngle(radius);
+            }, self);
+            
+            menuLayer.setItemCallback("triS", function(val){
+                var radius = 30;
                 drawLayer.addTriAngle(radius);
             }, self);
             

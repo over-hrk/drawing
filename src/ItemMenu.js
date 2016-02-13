@@ -1,130 +1,87 @@
+/* global width */
 var MenuLayer = cc.LayerColor.extend({
     sprite:null,
     mainLayer:null,
     
-    drawCircleCallbackFunc : null,
-    drawCircleCallbackTarget : null,
-    
-    drawRectCallbackFunc : null,
-    drawRectCallbackTarget : null,
-    
-    drawTriCallbackFunc : null,
-    drawTriCallbackTarget : null,
+    makeMenuItem : function(_name, _resource, _size){
+        
+        var menu = new cc.MenuItemImage(
+            _resource,  
+            _resource, 
+            _resource
+        );
+        
+        menu.attr({
+            scaleX : _size/ menu.width,
+            scaleY : _size / menu.height
+        });
+        
+        menu.setName(_name);
+      
+        return menu;
+    },
     
     ctor:function () {
         this._super(cc.color(200,200, 50,100), cc.winSize.width, 80);
+       
+        var circleL =    this.makeMenuItem("circleL", res.Puck, 80 );
+        var circleM =    this.makeMenuItem("circleM", res.Puck, 80 );
+        var circleS =    this.makeMenuItem("circleS", res.Puck, 80 );
         
-        // menus
-        var circleMenu = new cc.MenuItemImage(
-            res.Puck,  
-            res.Puck, 
-            res.Puck, 
-            function(){
-                if( this.drawCircleCallbackFunc == null ){
-                    return;
-                }
-                
-                if(this.drawCircleCallbackTarget){
-                    this.drawCircleCallbackFunc.call(this.drawCircleCallbackTarget);
-                }else{
-                    this.drawCircleCallbackFunc();
-                }
-            },
-            this
-        );
+        var rectL =      this.makeMenuItem("rectL", res.Puck, 80 );
+        var rectM =      this.makeMenuItem("rectM", res.Puck, 80 );
+        var rectS =      this.makeMenuItem("rectS", res.Puck, 80 );
         
-        circleMenu.attr({
-            scaleX : 80 / circleMenu.width,
-            scaleY : 80 / circleMenu.height
-            //x : 0,
-            //y : 0
-        });
-        // circleMenu.setAnchorPoint(cc.p(0,0));
-        this.circleMenu = circleMenu;
+        var triL =       this.makeMenuItem("triL", res.Puck, 80 );
+        var triM =       this.makeMenuItem("triM", res.Puck, 80 );
+        var triS =       this.makeMenuItem("triS", res.Puck, 80 );
         
-        ///////
-        var rectMenu = new cc.MenuItemImage(
-            res.Puck,  
-            res.Puck, 
-            res.Puck, 
-            function(){
-                if( this.drawRectCallbackFunc == null ){
-                    return;
-                }
-                
-                if(this.drawRectCallbackTarget){
-                    this.drawRectCallbackFunc.call(this.drawRectCallbackTarget);
-                }else{
-                    this.drawRectCallbackFunc();
-                }
-            },
-            this
-        );
+        var menusCircle = new cc.Menu(circleL, circleM, circleS );
+        var menusRect   = new cc.Menu(rectL, rectM, rectS );
+        var menusTri    = new cc.Menu(triL, triM, triS );
         
-        rectMenu.attr({
-            scaleX : 80 / rectMenu.width,
-            scaleY : 80 / rectMenu.height
-            //x : 0,
-            //y : 0
-        });
-        // rectMenu.setAnchorPoint(cc.p(0,0));
-        this.rectMenu = rectMenu;
-        //////
+        menusCircle.alignItemsHorizontally();
+        menusCircle.alignItemsHorizontallyWithPadding(0);
+        menusRect.alignItemsHorizontally();
+        menusRect.alignItemsHorizontallyWithPadding(0);
+        menusTri.alignItemsHorizontally();
+        menusTri.alignItemsHorizontallyWithPadding(0);
+        // menus.alignItemsVerticallyWithPadding(0);
+        // menus.alignItemsInColumns(3,3,3);
+        // menus.alignItemsInRows(3,3,3);
         
-        var triangleMenu = new cc.MenuItemImage(
-            res.Puck,  
-            res.Puck, 
-            res.Puck, 
-            function(){
-                if( this.drawTriCallbackFunc == null ){
-                    return;
-                }
-                
-                if(this.drawTriCallbackTarget){
-                    this.drawTriCallbackFunc.call(this.drawTriCallbackTarget);
-                }else{
-                    this.drawTriCallbackFunc();
-                }
-            },
-            this
-        );
+        menusCircle.setPosition(cc.p(200,100));
+        menusRect.setPosition(cc.p(200,200));
+        menusTri.setPosition(cc.p(200,300));
         
-        triangleMenu.attr({
-            scaleX : 80 / triangleMenu.width,
-            scaleY : 80 / triangleMenu.height
-            // x : 0,
-            // y : 0
-        });
-        // triangleMenu.setAnchorPoint(cc.p(0,0));
-        this.triangleMenu = triangleMenu;
-        
-        
-        ///// 
-        
-        var menus = new cc.Menu(circleMenu, rectMenu, triangleMenu);
-        	
-        menus.alignItemsHorizontally();
-        // menus.setAnchorPoint(cc.p(0,0));
-        menus.setPosition(cc.p(100,50));
-        this.addChild(menus);
+        this.menus = [menusCircle, menusRect, menusTri];
+        this.addChild(menusCircle);
+        this.addChild(menusRect);
+        this.addChild(menusTri);
     },
     
-    setDrawCircleMenuCallback : function(_func, _target){
+    findChildFromMenuByName : function(_name){
         
-        this.drawCircleCallbackFunc = _func;
-        this.drawCircleCallbackTarget = _target;
-        this.circleMenu.setCallback(_func, _target);
+        for( var key in this.menus){
+            var menus = this.menus[key];
+            var menu = menus.getChildByName(_name);
+            if( !!menu ){
+                return menu;
+            }
+        }
+        
+        return null;
     },
     
-    setDrawRectMenuCallback : function(_func, _target){
-        this.drawRectCallbackFunc = _func;
-        this.drawRectCallbackTarget = _target;
-        this.rectMenu.setCallback(_func, _target);
-    },
-    
-    setDrawTriMenuCallback : function(_func, _target){
-        this.drawTriCallbackFunc = _func;
-        this.drawTriCallbackTarget = _target;
-        this.triangleMenu.setCallback(_func, _target);
+    setItemCallback : function(_name, _func, _target){
+        
+        var menu = this.findChildFromMenuByName(_name);
+        
+        if( !menu ){
+            return;
+        }
+        
+        menu.setCallback(_func, _target);
     }
+    
 });
