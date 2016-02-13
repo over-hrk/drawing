@@ -16,7 +16,9 @@ var res = {
     triS : "res/tadhack/button7.png",
     triM : "res/tadhack/button8.png",
     triL : "res/tadhack/button9.png",
-    erase : "res/tadhack/eraseall.png"
+    erase : "res/tadhack/eraseall.png",
+    
+    clear : "res/clear.png"
 };
 
 var g_resources = [];

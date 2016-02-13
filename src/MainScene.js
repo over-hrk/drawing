@@ -219,6 +219,7 @@ var MainScene = cc.Scene.extend({
             var mainLayer    = new MainLayer();
             var menuLayer    = new MenuLayer();
             var drawLayer    = new DrowLayer();
+            var textLayer1   = new TextInputLayer(cc.size(250,70));
             
             drawLayer.attr({
                 x : cc.winSize.width/4,
@@ -228,6 +229,11 @@ var MainScene = cc.Scene.extend({
             menuLayer.attr({
                 x : cc.winSize.width - 140,
                 y : cc.winSize.height/4 + 80
+            });
+            
+            textLayer1.attr({
+                x : 150,
+                y : 60
             });
             
             menuLayer.setItemCallback("circleL", function(val){
@@ -284,6 +290,7 @@ var MainScene = cc.Scene.extend({
             self.removeChild(waitLayer);
             self.addChild(virtualLayer,1);
             self.addChild(menuLayer,2);
+            self.addChild(textLayer1, 2);
         };
         
         if( mkmk.frameByFrameSyncManager.isHost ){
