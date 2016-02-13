@@ -19,6 +19,8 @@
         "src/rtc.js",
         "src/MainScene.js",
         "src/EnterScene.js",
-        "src/VirtualLayer.js"
+        "src/VirtualLayer.js",
+        "src/drawLayer.js",
+        "src/ItemMenu.js"
     ]
 }
