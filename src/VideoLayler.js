@@ -18,25 +18,25 @@ var VideoLayer = cc.Layer.extend({
 
   init: function () {
 
-    var video = new ccui.VideoPlayer("http://benchmark.cocos2d-x.org/cocosvideo.mp4");
+    var video = new ccui.VideoPlayer("res/nowloading.mp4");
     video.setContentSize(320, 240);
-    video.setPosition(150, 240);
+    video.setPosition(100, 240);
     video.setScale(0.5);
     window.video = video;
     //this.addChild(video);
     video.play();
 
-    var video2 = new ccui.VideoPlayer("http://benchmark.cocos2d-x.org/cocosvideo.mp4");
+    var video2 = new ccui.VideoPlayer("res/nowloading.mp4");
     video2.setContentSize(320, 240);
-    video2.setPosition(150, 50);
+    video2.setPosition(100, 50);
     video2.setScale(0.5);
     window.video2 = video2;
     //this.addChild(video2);
     video2.play();
 
-    var video3 = new ccui.VideoPlayer("http://benchmark.cocos2d-x.org/cocosvideo.mp4");
+    var video3 = new ccui.VideoPlayer("res/nowloading.mp4");
     video3.setContentSize(320, 240);
-    video3.setPosition(480, 50);
+    video3.setPosition(450, 50);
     video3.setScale(0.5);
     window.video3 = video3;
     //this.addChild(video3);
