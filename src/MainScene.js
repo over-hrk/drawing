@@ -254,6 +254,7 @@ var MainScene = cc.Scene.extend({
             var menuLayer    = new MenuLayer();
             var drawLayer    = new DrowLayer();
             var textLayer1   = new TextInputLayer(cc.size(250,70));
+            var textLayer2   = new TextInputLayer(cc.size(250,70));
             var videoLayer = new VideoLayer();
             
             drawLayer.attr({
@@ -268,6 +269,11 @@ var MainScene = cc.Scene.extend({
             
             textLayer1.attr({
                 x : 150,
+                y : 60
+            });
+            
+            textLayer2.attr({
+                x : 460,
                 y : 60
             });
             
@@ -336,15 +342,21 @@ var MainScene = cc.Scene.extend({
             self.addChild(virtualLayer,1);
             self.addChild(menuLayer,2);
             self.addChild(textLayer1, 2);
+            self.addChild(textLayer2, 2);
             self.addChild(videoLayer, 2);
-
+            
             rtc_manager.setReceiveAction(function(peerID, data){
                 switch(data.label) {
                   case "draw":
                     drawLayer.receiver(data);
                     break;
                   case "balloon":
-                    textLayer1.receiver(data);
+                    if( data.client_no == 2 ){
+                        textLayer2.receiver(data);
+                    }else{
+                        textLayer1.receiver(data);
+                    }
+                    
                     break;
             }
         });
