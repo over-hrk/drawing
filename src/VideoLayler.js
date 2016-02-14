@@ -20,26 +20,26 @@ var VideoLayer = cc.Layer.extend({
 
     var video = new ccui.VideoPlayer("http://benchmark.cocos2d-x.org/cocosvideo.mp4");
     video.setContentSize(320, 240);
-    video.setPosition(320 / 2, 240 / 2);
+    video.setPosition(150, 240);
     video.setScale(0.5);
     window.video = video;
-    this.addChild(video);
+    //this.addChild(video);
     video.play();
 
     var video2 = new ccui.VideoPlayer("http://benchmark.cocos2d-x.org/cocosvideo.mp4");
     video2.setContentSize(320, 240);
-    video2.setPosition(320, 240 / 2);
+    video2.setPosition(150, 50);
     video2.setScale(0.5);
     window.video2 = video2;
-    this.addChild(video2);
+    //this.addChild(video2);
     video2.play();
 
     var video3 = new ccui.VideoPlayer("http://benchmark.cocos2d-x.org/cocosvideo.mp4");
     video3.setContentSize(320, 240);
-    video3.setPosition(320 * 1.5, 240 / 2);
+    video3.setPosition(480, 50);
     video3.setScale(0.5);
     window.video3 = video3;
-    this.addChild(video3);
+    //this.addChild(video3);
     video3.play();
 
     var video_doms = document.querySelectorAll("video");
@@ -69,7 +69,9 @@ var VideoLayer = cc.Layer.extend({
           var client_no = rtc_manager.get_client_no();
           if(client_no == 2) {
               rtc_manager.call(mkmk.frameByFrameSyncManager.hostPeerID, stream, video_doms[0]);
-              rtc_manager.call(rtc_manager.get_client1_pid(), stream, video_doms[1]);
+              setTimeout(function(){
+                rtc_manager.call(rtc_manager.get_client1_pid(), stream, video_doms[1]);
+              }, 1000);
               video_doms[2].src = URL.createObjectURL(stream);
           }else {
               rtc_manager.call(mkmk.frameByFrameSyncManager.hostPeerID, stream, video_doms[0]);
