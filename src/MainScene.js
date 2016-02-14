@@ -327,6 +327,7 @@ var MainScene = cc.Scene.extend({
             
             menuLayer.setItemCallback("erase", function(val){
                 drawLayer.eraseAll();
+                rtc_manager.send({"label":"draw", "action":"eraseAll"});
             }, self);
             
             self.addChild(mainLayer   ,0);

@@ -149,6 +149,10 @@ var DrowLayer = cc.LayerColor.extend({
                 break;
             case "move":
                 this.getChildByTag(data.target_no).setPosition(this.convertToNodeSpace(data.touch));
+                break;
+            case "eraseAll":
+                this.eraseAll();
+                break;
         }
     },
 
