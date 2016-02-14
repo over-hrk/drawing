@@ -158,8 +158,8 @@ var DrowLayer = cc.LayerColor.extend({
 
     presentWinner : function(connect_id){
         
-        var sprite = new cc.Sprite(res.Puck); 
-        
+        var sprite = new cc.Sprite(res.craker1);
+
         var offset = connect_id == 2 ? 350 : 0;
         
         sprite.attr({
@@ -168,9 +168,23 @@ var DrowLayer = cc.LayerColor.extend({
             x : -100+offset,
             y : -80
         });
-        
         this.addChild(sprite);
-        
+
+        // 続くパラパラアニメを登録
+        var animation = new cc.Animation();
+        animation.addSpriteFrameWithFile(res.craker1);
+        animation.addSpriteFrameWithFile(res.craker2);
+        animation.addSpriteFrameWithFile(res.craker3);
+        animation.setRestoreOriginalFrame(true);   // 最初の画像に戻すかどうか
+        //animation->setDelayPerUnit(0.5f / 4.0f);
+        animation.setDelayPerUnit(10/30);
+    
+        // パラパラアニメを動かす
+        var animate = new cc.Animate(animation);
+        var animated = new cc.RepeatForever(animate);
+        //RepeatForever *animated = RepeatForever::create(animate);
+        sprite.runAction(animated);
+
         var text = new cc.LabelTTF("You win!", "Arial", 20);
         
         text.attr({
@@ -178,7 +192,7 @@ var DrowLayer = cc.LayerColor.extend({
             y : -80
         });
         
-        	
+        
         text.setFontFillColor( cc.color(0,0,0) );
         
         this.addChild(text, 5);

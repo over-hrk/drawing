@@ -21,7 +21,11 @@ var res = {
     player1 : "res/tadhack/collected1.png",
     player2 : "res/tadhack/collected2.png",
     
-    clear : "res/clear.png"
+    clear : "res/clear.png",
+
+    craker1: "res/craker/cracker01.png",
+    craker2: "res/craker/cracker02.png",
+    craker3: "res/craker/cracker03.png"
 };
 
 var g_resources = [];
