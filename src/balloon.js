@@ -32,7 +32,8 @@ var TextInputLayer = cc.LayerColor.extend({
      */
     editBoxTextChanged : function (sender){ 
         cc.log(sender.getString());
-        rtc_manager.send({"label":"balloon", "message":sender.getString()});
+        var client_no = rtc_manager.get_client_no();
+        rtc_manager.send({"label":"balloon", "message":sender.getString(), "client_no":client_no});
     },
     
     
