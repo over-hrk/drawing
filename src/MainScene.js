@@ -9,7 +9,7 @@ var MainLayer = cc.LayerColor.extend({
         var peerID_txt = new cc.LabelTTF(msg.showPeerID+rtc_manager.getmyid(), "Arial", 38);
         peerID_txt.x = winSize.width / 2;
         peerID_txt.y = winSize.height / 2 + 200;
-        this.addChild(peerID_txt, 5);
+        // this.addChild(peerID_txt, 5);
         
         var bg = new cc.Sprite(res.back);
         bg.attr({
@@ -273,7 +273,7 @@ var MainScene = cc.Scene.extend({
             });
             
             textLayer2.attr({
-                x : 460,
+                x : 490,
                 y : 60
             });
             

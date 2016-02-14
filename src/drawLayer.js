@@ -5,7 +5,7 @@ var DrowLayer = cc.LayerColor.extend({
     figureIndex : 0,
     
     ctor:function () {
-        this._super(cc.color(200,200, 50,100), cc.winSize.width/2, cc.winSize.height/2);
+        this._super(cc.color(200,200, 50,0), cc.winSize.width/2, cc.winSize.height/2);
         
         // start listening touch event.
         var event = cc.EventListener.create(this.touchEvent);
