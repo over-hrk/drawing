@@ -1,5 +1,6 @@
 var TextInputLayer = cc.LayerColor.extend({
     sprite:null,
+    inputForm:null,
     
     ctor:function (_size) {
         this._super(cc.color(25,25, 25,0), _size.width, _size.height);
@@ -14,6 +15,8 @@ var TextInputLayer = cc.LayerColor.extend({
                         });
         inputForm.setDelegate(this);
         this.addChild(inputForm);
+        
+        this.inputForm = inputForm;
     },
     
     /**
@@ -29,7 +32,13 @@ var TextInputLayer = cc.LayerColor.extend({
      */
     editBoxTextChanged : function (sender){ 
         cc.log(sender.getString());
-    }
+        rtc_manager.send({"label":"balloon", "message":sender.getString()});
+    },
     
+    
+    
+    receiver : function(data){
+        this.inputForm.setString(data.message);
+    }
     
 });

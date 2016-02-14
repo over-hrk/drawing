@@ -342,6 +342,9 @@ var MainScene = cc.Scene.extend({
                   case "draw":
                     drawLayer.receiver(data);
                     break;
+                  case "balloon":
+                    textLayer1.receiver(data);
+                    break;
             }
         });
 
