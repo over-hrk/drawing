@@ -40,10 +40,14 @@ var MenuLayer = cc.LayerColor.extend({
         
         var erase =      this.makeMenuItem("erase", res.erase, 100 );
         
+        var player1Win =      this.makeMenuItem("player1Win", res.player1, 45 );
+        var player2Win =      this.makeMenuItem("player2Win", res.player2, 45 );
+        
         var menusCircle = new cc.Menu(circleL, circleM, circleS );
         var menusRect   = new cc.Menu(rectL, rectM, rectS );
         var menusTri    = new cc.Menu(triL, triM, triS );
         var eraseButton = new cc.Menu(erase);
+        var winnerButton = new cc.Menu(player1Win, player2Win);
         
         menusCircle.alignItemsHorizontally();
         menusCircle.alignItemsHorizontallyWithPadding(0);
@@ -52,16 +56,21 @@ var MenuLayer = cc.LayerColor.extend({
         menusTri.alignItemsHorizontally();
         menusTri.alignItemsHorizontallyWithPadding(0);
         
+        winnerButton.alignItemsHorizontally();
+        winnerButton.alignItemsHorizontallyWithPadding(20);
+        
         menusRect.setPosition(cc.p(0,200));
         menusCircle.setPosition(cc.p(0,150));
         menusTri.setPosition(cc.p(0,100));
         eraseButton.setPosition(cc.p(0,50));
+        winnerButton.setPosition(cc.p(0,10));
         
-        this.menus = [menusCircle, menusRect, menusTri, eraseButton];
+        this.menus = [menusCircle, menusRect, menusTri, eraseButton, winnerButton];
         this.addChild(menusCircle);
         this.addChild(menusRect);
         this.addChild(menusTri);
         this.addChild(eraseButton);
+        this.addChild(winnerButton);
     },
     
     findChildFromMenuByName : function(_name){

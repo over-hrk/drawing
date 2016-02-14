@@ -336,6 +336,16 @@ var MainScene = cc.Scene.extend({
                 rtc_manager.send({"label":"draw", "action":"eraseAll"});
             }, self);
             
+            menuLayer.setItemCallback("player1Win", function(val){
+                drawLayer.presentWinner(1);
+                rtc_manager.send({"label":"winnner", "action":"player1Win"});
+            }, self);
+            
+            menuLayer.setItemCallback("player2Win", function(val){
+                drawLayer.presentWinner(2);
+                rtc_manager.send({"label":"winnner", "action":"player2Win"});
+            }, self);
+            
             self.addChild(mainLayer   ,0);
             self.addChild(drawLayer   ,2);
             self.removeChild(waitLayer);
@@ -356,7 +366,13 @@ var MainScene = cc.Scene.extend({
                     }else{
                         textLayer1.receiver(data);
                     }
-                    
+                    break;
+                case "winnner":
+                    if(data.action == "player2Win"){
+                        drawLayer.presentWinner(2);
+                    }else{
+                        drawLayer.presentWinner(1);
+                    }
                     break;
             }
         });

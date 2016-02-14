@@ -18,6 +18,9 @@ var res = {
     triL : "res/tadhack/button9.png",
     erase : "res/tadhack/eraseall.png",
     
+    player1 : "res/tadhack/collected1.png",
+    player2 : "res/tadhack/collected2.png",
+    
     clear : "res/clear.png"
 };
 

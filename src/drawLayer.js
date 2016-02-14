@@ -156,6 +156,34 @@ var DrowLayer = cc.LayerColor.extend({
         }
     },
 
+    presentWinner : function(connect_id){
+        
+        var sprite = new cc.Sprite(res.Puck); 
+        
+        var offset = connect_id == 2 ? 350 : 0;
+        
+        sprite.attr({
+            scaleX : 50/sprite.width,
+            scaleY : 50/sprite.height,
+            x : -100+offset,
+            y : -80
+        });
+        
+        this.addChild(sprite);
+        
+        var text = new cc.LabelTTF("You win!", "Arial", 20);
+        
+        text.attr({
+            x : sprite.x + 60,
+            y : -80
+        });
+        
+        	
+        text.setFontFillColor( cc.color(0,0,0) );
+        
+        this.addChild(text, 5);
+    },
+
     /**
      * touch event callback.
      */
